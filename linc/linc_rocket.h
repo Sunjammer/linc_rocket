@@ -10,10 +10,10 @@
 
 namespace linc {
 
-    namespace empty {
+    namespace rocket {
 
         extern int example();
 
-    } //empty namespace
+    } //rocket namespace
 
 } //linc
