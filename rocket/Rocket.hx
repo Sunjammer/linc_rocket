@@ -47,35 +47,38 @@ extern class Rocket {
     @:native('sync_get_val')
     static function sync_get_val(track:Pointer<SyncTrack>, row:Float):Float;
     
-    static inline function sync_update(device:Pointer<SyncDevice>, row:Int, 
+    static inline function sync_update(device:Pointer<SyncDevice>, row:Int,
         sync_cb:{ 
             pause:Dynamic->Int->Void, 
             set_row:Dynamic->Int->Void, 
             is_playing:Dynamic->Int
         }, cp_param:Pointer<Dynamic>):Int
     {
+        force_include();
         SyncCB._pause = sync_cb.pause;
         SyncCB._set_row = sync_cb.set_row;
         SyncCB._is_playing = sync_cb.is_playing;
         return untyped __cpp__("linc::rocket::sync_update_helper({0}, {1}, {2}, {3}, {4}, {5})", device, row, Pointer.addressOf(SyncCB.pause_callable), Pointer.addressOf(SyncCB.set_row_callable), Pointer.addressOf(SyncCB.is_playing_callable), cp_param);
     }
+    
+	@:native("void") 
+	public static function force_include():Void{ };
 
 } //rocket
 
 @:unreflective
 @:structAccess
+@:include('../lib/rocket/lib/sync.h')
 @:native("sync_device")
-extern class SyncDevice {
-}
+extern class SyncDevice { }
 
 @:unreflective
 @:structAccess
 @:native("track_key")
-extern class TrackKey {
-}
+extern class TrackKey { }
 
 @:unreflective
 @:structAccess
+@:include('../lib/rocket/lib/track.h')
 @:native("sync_track")
-extern class SyncTrack {
-}
+extern class SyncTrack { }
