@@ -6,10 +6,6 @@ namespace linc {
 
     namespace rocket {
 
-        int example() {
-            return 55;
-        }
-
     } //rocket namespace
 
 } //linc

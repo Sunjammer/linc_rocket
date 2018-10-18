@@ -1,4 +1,8 @@
 package rocket;
+import cpp.*;
+import cpp.VirtualArray;
+
+typedef VoidPtr = Pointer<cpp.Void>;
 
 @:keep
 @:include('linc_rocket.h')
@@ -7,25 +11,35 @@ package rocket;
 @:build(linc.Linc.xml('rocket'))
 #end
 extern class Rocket {
+    public static inline var SYNC_DEFAULT_PORT:Int = 1338;
+    @:native('sync_create_device')
+    static function sync_create_device(name:String) : Pointer<SyncDevice>;
 
-        //external native function definition
-        //can be wrapped in linc::libname or call directly
-        //and the header for the lib included in linc_rocket.h
+    @:native('sync_destroy_device')
+    static function sync_destroy_device(device:Pointer<SyncDevice>): Void;
 
-    @:native('linc::rocket::example')
-    static function example() : Int;
-
-        //inline functions can be used as wrappers
-        //and can be useful to juggle haxe typing to or from the c++ extern
-
-    static inline function inline_example() : Int {
-        return untyped __cpp__('linc::rocket::example()');
-    }
-
-    @:native('linc::rocket::example')
-    private static function _internal_example() : Int;
-    static inline function other_inline_example() : Int {
-        return _internal_example();
-    }
+    @:native('sync_tcp_connect')
+    static function sync_tcp_connect(device:Pointer<SyncDevice>, host:String, port:UInt):Int;
 
 } //rocket
+
+@:unreflective
+@:structAccess
+@:native("sync_device")
+extern class SyncDevice {
+	public var base:Dynamic;
+    public var tracks:Dynamic;
+	public var num_tracks:UInt;
+	public var sync_io_cb:Dynamic;
+}
+
+@:structAccess
+@:native("track_key")
+extern class TrackKey {
+
+}
+
+@:structAccess
+@:native("sync_track")
+extern class SyncTrack {
+}
