@@ -1,8 +1,28 @@
 package rocket;
 import cpp.*;
-import cpp.VirtualArray;
 
 typedef VoidPtr = Pointer<cpp.Void>;
+
+class SyncCB{
+    public static var _pause:Dynamic->Int->Void;
+    public static var _set_row:Dynamic->Int->Void;
+    public static var _is_playing:Dynamic->Int;
+
+    static function pause(d:Dynamic, i:Int):Void{
+        _pause(d, i);
+    }
+    static function set_row(d:Dynamic, i:Int):Void{
+        _set_row(d, i);
+    }
+    static function is_playing(d:Dynamic):Int{
+        return _is_playing(d);
+    }
+    
+    public static var pause_callable = Callable.fromStaticFunction(pause);
+    public static var set_row_callable = Callable.fromStaticFunction(set_row);
+    public static var is_playing_callable = Callable.fromStaticFunction(is_playing);
+
+}
 
 @:keep
 @:include('linc_rocket.h')
@@ -26,33 +46,32 @@ extern class Rocket {
 
     @:native('sync_get_val')
     static function sync_get_val(track:Pointer<SyncTrack>, row:Float):Float;
-
-    @:native('sync_update')
-    static function sync_update(device:Pointer<SyncDevice>, row:Int, sync_cb:Pointer<SyncCb>, cp_param:Pointer<Dynamic>):Int;
+    
+    static inline function sync_update(device:Pointer<SyncDevice>, row:Int, 
+        sync_cb:{ 
+            pause:Dynamic->Int->Void, 
+            set_row:Dynamic->Int->Void, 
+            is_playing:Dynamic->Int
+        }, cp_param:Pointer<Dynamic>):Int
+    {
+        SyncCB._pause = sync_cb.pause;
+        SyncCB._set_row = sync_cb.set_row;
+        SyncCB._is_playing = sync_cb.is_playing;
+        return untyped __cpp__("linc::rocket::sync_update_helper({0}, {1}, {2}, {3}, {4}, {5})", device, row, Pointer.addressOf(SyncCB.pause_callable), Pointer.addressOf(SyncCB.set_row_callable), Pointer.addressOf(SyncCB.is_playing_callable), cp_param);
+    }
 
 } //rocket
 
 @:unreflective
 @:structAccess
-@:native("sync_cb")
-extern class SyncCb {
-}
-
-@:unreflective
-@:structAccess
 @:native("sync_device")
 extern class SyncDevice {
-	public var base:Dynamic;
-    public var tracks:Dynamic;
-	public var num_tracks:UInt;
-	public var sync_io_cb:Dynamic;
 }
 
 @:unreflective
 @:structAccess
 @:native("track_key")
 extern class TrackKey {
-
 }
 
 @:unreflective
