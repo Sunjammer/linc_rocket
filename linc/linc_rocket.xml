@@ -13,7 +13,7 @@
     </files>
 
     <target id="haxe">
-        <lib name="${LINC_ROCKET_PATH}lib/rocket/lib/librocket-playerd.lib"  />
+        <lib name="${LINC_ROCKET_PATH}lib/librocket-playerd.lib"  />
     </target>
 
 </xml>
