@@ -38,6 +38,9 @@ extern class Rocket {
     @:native('sync_destroy_device')
     static function sync_destroy_device(device:Pointer<SyncDevice>): Void;
 
+    @:native('sync_save_tracks')
+    static function sync_save_tracks(device:Pointer<SyncDevice>): Int;
+
     @:native('sync_tcp_connect')
     static function sync_tcp_connect(device:Pointer<SyncDevice>, host:String, port:UInt):Int;
 
