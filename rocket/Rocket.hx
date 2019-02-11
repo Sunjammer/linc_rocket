@@ -65,7 +65,7 @@ extern class Rocket {
     }
     
 	@:native("void") 
-	public static function force_include():Void{ };
+	public static function force_include():Void;
 
 } //rocket
 

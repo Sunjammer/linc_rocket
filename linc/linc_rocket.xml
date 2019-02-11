@@ -9,6 +9,7 @@
         <file name='${LINC_ROCKET_PATH}linc/linc_rocket.cpp' />
         <file name='${LINC_ROCKET_PATH}lib/rocket/lib/device.c' />
         <file name='${LINC_ROCKET_PATH}lib/rocket/lib/track.c' />
+        <cache value="true" project="linc_rocket" asLibrary="true" />
 
     </files>
 
